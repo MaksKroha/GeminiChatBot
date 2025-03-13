@@ -1,29 +1,26 @@
+import time
 import telebot
-from google import genai
-import json
+import psycopg2
 
-# MAIN VARIABLES
-json_data = None
-bot = None
-client = None
+from dotenv import load_dotenv
+from os import getenv
 
-with open("package.json", "r") as jsonfile:
-    json_data = json.load(jsonfile)
-
-bot = telebot.TeleBot(json_data["telegram_bot_token"])
-client = genai.Client(api_key=json_data["gemini_api_key"])
+# MINE PACKAGES
+import handlers
 
 
-@bot.message_handler(commands=["hello"])
-def helloCommand(msg):
-    bot.send_message(msg.chat.id, "Hello")
 
+load_dotenv()
+bot = telebot.TeleBot(getenv("TG_BOT_TOKEN"))
+
+
+@bot.message_handler(commands=["start"])
+def start(message):
+    handlers.start(bot, message)
 
 @bot.message_handler()
-def getResponseFromGemini(msg):
-    response = client.models.generate_content(model="gemini-2.0-flash",
-                                              contents=f"{msg.json['text']}")
-    bot.send_message(msg.chat.id, response.text)
+def other(message):
+    handlers.other(bot, message)
 
 
 bot.infinity_polling()

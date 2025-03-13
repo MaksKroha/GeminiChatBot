@@ -1,7 +1,40 @@
 # MINE IGNORES
 package.json
 .idea/
+my_python_env/
 
+# Docker-specific ignores
+.dockerignore
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# Docker volumes and temporary files
+volumes/
+docker-data/
+db-data/
+
+# Build artifacts
+*.tar
+*.img
+*.iso
+*.qcow2
+
+# Docker logs and temporary files
+docker-logs/
+logs/
+*.log
+
+# Ignore local environment variables
+.env
+.env.*
+.envrc
+secrets/
+config/secrets.yml
+
+# Ignore Docker pid, socket, and cache files
+docker.pid
+docker.sock
+.cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
