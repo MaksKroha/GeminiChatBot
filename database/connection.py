@@ -4,7 +4,7 @@ from time import sleep
 
 def get_connection(db_name):
     try:
-        connection = connect(host="localhost",
+        connection = connect(host="postgres",
                             database=db_name,
                             user="root",
                             password="1234",

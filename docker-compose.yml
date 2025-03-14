@@ -24,8 +24,21 @@ services:
       - postgres
     networks:
       - my_network
+  app:
+    build: .
+    container_name: my_python_app
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
+    networks:
+      - my_network
 networks:
   my_network:
+
 volumes:
   pgdata:
     driver: local
