@@ -35,7 +35,7 @@ This project is a Telegram chatbot that leverages the Gemini API to provide inte
 
 ### Connection Management
 
-- `get_connection(db_name)`: Establishes and manages a connection to the PostgreSQL database.
+- `get_connection(db_name, host, user, password, port)`: Establishes and manages a connection to the PostgreSQL database.
 
 ## Setup
 
@@ -51,8 +51,8 @@ This project is a Telegram chatbot that leverages the Gemini API to provide inte
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/telegram-gemini-bot.git
-   cd telegram-gemini-bot
+   git clone https://github.com//MaksKroha/GeminiChatBot.git
+   cd GeminiChatBot
    ```
 
 2. Install dependencies:
@@ -66,14 +66,18 @@ This project is a Telegram chatbot that leverages the Gemini API to provide inte
 4. Configure environment variables:
 
    ```bash
-   export TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-   export GEMINI_API_KEY=your_gemini_api_key
+   TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+   GEMINI_API_KEY=your_gemini_api_key
+   SEPARATOR=message_separator
+   DB_NAME=your_database_name
+   DB_HOST=your_service_name
+   DB_USER=your_user_name
+   DB_PASSWORD=your_db_password
+   DB_PORT=yout_db_port
    ```
-
-5. Run the bot:
-
+5. Run the main file which launch the bot and starts accepting requests from the user on [telegram](t.me/gemini_chat_python_bot)
    ```bash
-   python main.py
+   python3 main.py
    ```
 
 ## Usage
@@ -82,6 +86,64 @@ This project is a Telegram chatbot that leverages the Gemini API to provide inte
 2. Use the reply keyboard to navigate between options like **New Chat** and **History**.
 3. Engage in conversations, and the bot will save your chat history for future reference.
 
+## Docker Deployment
+
+The project includes Docker support for easy deployment.
+
+### Running with Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+To stop and remove the containers:
+
+```bash
+docker-compose down
+```
+
+### Services
+
+- **bot**: Runs the Telegram bot backend in Python.
+- **postgres**: Hosts the PostgreSQL database.
+- **pgadmin**: Provides a web interface for managing the database.
+
+### Database Initialization
+
+Upon the first run, the PostgreSQL container executes `init.sql` to create the necessary database and tables automatically.
+
+## Project Structure
+
+```
+telegram-gemini-bot/
+├── database/               # Database-related functions
+├── exception/              # Exception handling and logging
+├── gemini/                 # Gemini API integration
+├── handlers/               # Bot logic and command handlers
+├── keyboard/               # Telegram reply keyboard setup
+├── .dockerignore
+├── .env                    # Environment variables
+├── .gitignore
+├── bot.log                 # Log file for exceptions and debug info
+├── docker-compose.yml      # Docker configuration
+├── Dockerfile              # Docker build instructions
+├── init.sql                # SQL script to initialize database
+├── main.py                 # Entry point of the bot
+├── README.md               # Project documentation
+├── requirements.txt        # Python dependencies
+└── User.py                 # User model
+```
+
+## pgAdmin Access
+
+To access pgAdmin for database management, open:
+
+```
+http://localhost:8080
+```
+
+These values can be changed in the `docker-compose.yml` file.
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
@@ -89,3 +151,7 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 ## License
 
 This project is licensed under the MIT License.
+
+## Author
+
+Maksym [GitHub](https://github.com/MaksKroha) | [Telegram](https://t.me/maks_kroha)
