@@ -1,34 +1,46 @@
-import time
+# Setting settings for logining file
+import logging
+logging.basicConfig(
+    filename='bot.log',
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)s %(filename)s:%(lineno)d (%(funcName)s) - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+
+
 import telebot
-import psycopg2
-
-from dotenv import load_dotenv
-from os import getenv
-
+from exception import log_exception
 from User import User
-
-# MINE PACKAGES
 import handlers
 
-
-
+# Reading from .env file
+from dotenv import load_dotenv
+from os import getenv
 load_dotenv()
 bot = telebot.TeleBot(getenv("TG_BOT_TOKEN"))
 users = {}
 
+
+
 @bot.message_handler(commands=["start"])
 def start(message):
-    user = User()
-    user.set_chat_id(message.chat.id)
-    user.set_username(message.chat.username)
-    users[message.chat.id] = user
+    try:
+        user = User()
+        user.set_chat_id(message.chat.id)
+        user.set_username(message.chat.username)
+        users[message.chat.id] = user
 
-    handlers.start(bot, user, message.text)
+        handlers.start(bot, user)
+    except Exception as e:
+        log_exception(str(e))
+
 
 @bot.message_handler()
 def other(message):
-    if message.chat.id in users:
-        handlers.other(bot, users[message.chat.id], message.text, message.message_id)
-
+    try:
+        if message.chat.id in users:
+            handlers.other(bot, users[message.chat.id], message.text, message.message_id)
+    except Exception as e:
+        log_exception(str(e))
 
 bot.infinity_polling()

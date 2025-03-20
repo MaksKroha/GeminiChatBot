@@ -4,6 +4,14 @@ from keyboard import get_reply_keyboard
 from User import User
 
 
+# Adds a new conversation to the user's current chat.
+# Marks the chat as modified and generates a response
+# using the Gemini API based on the provided message
+# and chat context. Updates the current chat dialog
+# with the user's message and the generated response.
+# Ensures the dialog does not exceed 6 messages by
+# trimming older messages if necessary. Sends the
+# response to the user with a reply keyboard.
 def add_conversation_to_current_chat(bot, user: User, message: str):
     user.set_current_chat_modified(True)
     response = get_gemini_response(message, context=user.get_current_chat_dialog())
