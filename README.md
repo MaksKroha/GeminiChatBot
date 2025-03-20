@@ -1,6 +1,6 @@
 # Telegram Chatbot with Gemini Integration
 
-This project is a Telegram chatbot that leverages the Gemini API to provide interactive and intelligent conversations. It allows users to engage in chats, save chat history, and retrieve previous conversations. The bot is designed to handle multiple users, store chat data in a PostgreSQL database, and provide a seamless user experience.
+This project is a Telegram chatbot that leverages the Gemini API to provide interactive and intelligent conversations. It allows users to engage in chats, save chat history, and retrieve previous conversations. The bot is designed to handle multiple users, store chat data in a PostgreSQL database, and provide a seamless user experience. You can try it on [telegram](t.me/gemini_chat_python_bot) (but after a simple installation)
 
 ## Features
 
