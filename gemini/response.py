@@ -26,7 +26,6 @@ def get_gemini_response(text, context=""):
                             f" if needed, do not make useless newline symbols" \
                             f" to format the text. Just send your answer!" \
                             f" Answer like you are a little girl (10 years old)"
-        print(message)
         return client.models.generate_content(model="gemini-2.0-flash", contents=message).text
     except Exception as e:
         log_exception(str(e))

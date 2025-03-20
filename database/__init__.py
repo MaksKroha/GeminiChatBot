@@ -5,7 +5,12 @@ from os import getenv
 from .connection import get_connection
 
 load_dotenv()
-CONN = get_connection(getenv("DB_NAME"))
+
+CONN = get_connection(getenv("DB_NAME"),
+                      getenv("DB_HOST"),
+                      getenv("DB_USER"),
+                      getenv("DB_PASSWORD"),
+                      getenv("DB_PORT"))
 SEPARATOR = getenv("SEPARATOR")
 
 

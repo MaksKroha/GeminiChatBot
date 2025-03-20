@@ -9,13 +9,13 @@ from exception import log_exception
 # delay between attempts. Logs any exceptions that
 # occur during the connection process. Returns the
 # connection object if successful.
-def get_connection(db_name):
+def get_connection(db_name, host, user, password, port):
     try:
-        connection = connect(host="postgresppp",
-                            database=db_name,
-                            user="root",
-                            password="1234",
-                            port="5432")
+        connection = connect(database=db_name,
+                             host=host,
+                             user=user,
+                             password=password,
+                             port=port)
         return connection
     except Exception as e:
         log_exception(str(e))
