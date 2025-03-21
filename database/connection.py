@@ -18,6 +18,7 @@ def get_connection(db_name, host, user, password, port):
                              port=port)
         return connection
     except Exception as e:
+        print(f"{db_name}, {host}, {user}, {password}, {port}, {e}")
         log_exception(str(e))
         sleep(3)
-        return get_connection(db_name)
+        return get_connection(db_name, host, user, password, port)

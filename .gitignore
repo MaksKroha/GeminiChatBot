@@ -2,6 +2,8 @@
 package.json
 .idea/
 my_python_env/
+.github/
+keys/
 
 # Docker-specific ignores
 .dockerignore

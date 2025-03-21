@@ -1,9 +1,12 @@
 services:
   postgres:
     image: postgres
-    restart: always
+    restart: unless-stopped
+    env_file:
+      - .env.common
+      - .env.postgres
     environment:
-      POSTGRES_USER: root
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: gemini_chat_bot
     volumes:
@@ -14,25 +17,16 @@ services:
     networks:
       - my_network
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-    networks:
-      - my_network
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: my_python_app
     volumes:
       - .:/app
     ports:
       - "5000:5000"
-    environment:
-      - PYTHONUNBUFFERED=1
-    restart: always
+    restart: unless-stopped
     networks:
       - my_network
 networks:
