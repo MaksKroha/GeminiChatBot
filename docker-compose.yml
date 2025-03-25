@@ -3,12 +3,11 @@ services:
     image: postgres
     restart: unless-stopped
     env_file:
-      - .env.common
-      - .env.postgres
+      - .env
     environment:
       POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: gemini_chat_bot
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - pgdata:/var/lib/postgresql/data

@@ -1,3 +1,4 @@
+from exception import log_exception
 from handlers import SEPARATOR
 from gemini import get_gemini_response
 from keyboard import get_reply_keyboard
@@ -13,8 +14,13 @@ from User import User
 # trimming older messages if necessary. Sends the
 # response to the user with a reply keyboard.
 def add_conversation_to_current_chat(bot, user: User, message: str):
-    user.set_current_chat_modified(True)
     response = get_gemini_response(message, context=user.get_current_chat_dialog())
+
+    if response is None:
+        bot.send_message(user.get_chat_id(), "Your message contains violence or sexual nature!")
+        return
+
+    user.set_current_chat_modified(True)
 
     user.set_current_chat_dialog(user.get_current_chat_dialog() + f"{SEPARATOR}{message}")
     user.set_current_chat_dialog(user.get_current_chat_dialog() + f"{SEPARATOR}{response}")

@@ -40,6 +40,8 @@ def other(message):
     try:
         if message.chat.id in users:
             handlers.other(bot, users[message.chat.id], message.text, message.message_id)
+        else:
+            start(message)
     except Exception as e:
         log_exception(str(e))
 
