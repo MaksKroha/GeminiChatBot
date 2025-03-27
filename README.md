@@ -1,4 +1,4 @@
-# [Telegram Chatbot](t.me/gemini_chat_python_bot) with Gemini Integration
+# [Telegram Chatbot](https://t.me/gemini_chat_python_bot) with Gemini Integration
 
 This project is a Telegram chatbot that leverages the Gemini API to provide interactive and intelligent conversations. It allows users to engage in chats, save chat history, and retrieve previous conversations. The bot is designed to handle multiple users, store chat data in a PostgreSQL database, and provide a seamless user experience. You can try it but after a simple installation.
 
@@ -45,6 +45,7 @@ This project is a Telegram chatbot that leverages the Gemini API to provide inte
 - PostgreSQL database
 - Telegram Bot Token
 - Gemini API Key
+- Docker (optional)
 
 ### Installation
 
@@ -75,14 +76,14 @@ This project is a Telegram chatbot that leverages the Gemini API to provide inte
    DB_PASSWORD=your_db_password
    DB_PORT=yout_db_port
    ```
-5. Run the main file which launch the bot and starts accepting requests from the user on [telegram](t.me/gemini_chat_python_bot)
+5. Run the main file which launch the bot and starts accepting requests from the user on [telegram](https://t.me/gemini_chat_python_bot)
    ```bash
    python3 main.py
    ```
 
 ## Usage
 
-1. Start the bot on Telegram by sending `/start`.
+1. Start the bot on Telegram by sending `/start` (optional).
 2. Use the reply keyboard to navigate between options like **New Chat** and **History**.
 3. Engage in conversations, and the bot will save your chat history for future reference.
 
@@ -133,6 +134,10 @@ telegram-gemini-bot/
 ├── requirements.txt        # Python dependencies
 └── User.py                 # User model
 ```
+## Branch 'deploy'
+
+A branch for deploying a project to a remote server (in my case, aws).
+The branch contains all the necessary files (except .env) to create and run a container on a remote server with Docker installed
 
 ## pgAdmin Access
 
