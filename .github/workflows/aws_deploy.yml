@@ -84,4 +84,4 @@ jobs:
             
           # Для Database Instance
           ssh -i database_private_key.pem -o StrictHostKeyChecking=no &REMOTE_USER@$REMOTE_DATABASE_HOST$ \
-          "sudo shutdown -h +15"
+            "sudo shutdown -h +15"
