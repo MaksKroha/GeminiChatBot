@@ -64,3 +64,24 @@ jobs:
             docker rm python-app-container || true && \
             docker build -t python-app . && \
             docker run -d --env-file .env --name python-app-container python-app"
+
+      - name: Schedule Automatic Shutdown
+        env:
+          SSH_APP_PRIVATE_KEY: ${{ secrets.SSH_APP_PRIVATE_KEY }}
+          SSH_DATABASE_PRIVATE_KEY: ${{ secrets.SSH_DATABASE_PRIVATE_KEY }}
+          REMOTE_USER: "ubuntu"
+          REMOTE_APP_HOST: ${{ steps.get-app-ip.outputs.app_ip }}
+          REMOTE_DATABASE_HOST: ${{ steps.get-database-ip.outputs.database_ip }}
+        run: |
+          echo "$SSH_APP_PRIVATE_KEY" > app_private_key.pem
+          echo "$SSH_DATABASE_PRIVATE_KEY" > database_private_key.pem
+          chmod 600 app_private_key.pem
+          chmod 600 database_private_key.pem
+            
+          # Для Application Instance
+          ssh -i app_private_key.pem -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_APP_HOST \
+            "sudo shutdown -h +15"
+            
+          # Для Database Instance
+          ssh -i database_private_key.pem -o StrictHostKeyChecking=no &REMOTE_USER@$REMOTE_DATABASE_HOST$ \
+          "sudo shutdown -h +15"
