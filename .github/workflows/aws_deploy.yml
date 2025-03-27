@@ -73,15 +73,17 @@ jobs:
           REMOTE_APP_HOST: ${{ steps.get-app-ip.outputs.app_ip }}
           REMOTE_DATABASE_HOST: ${{ steps.get-database-ip.outputs.database_ip }}
         run: |
+          # Підготовка ключів
           echo "$SSH_APP_PRIVATE_KEY" > app_private_key.pem
           echo "$SSH_DATABASE_PRIVATE_KEY" > database_private_key.pem
-          chmod 600 app_private_key.pem
-          chmod 600 database_private_key.pem
-            
-          # Для Application Instance
-          ssh -i app_private_key.pem -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_APP_HOST \
-            "sudo shutdown -h +15"
-            
-          # Для Database Instance
-          ssh -i database_private_key.pem -o StrictHostKeyChecking=no &REMOTE_USER@$REMOTE_DATABASE_HOST$ \
-            "sudo shutdown -h +15"
+          chmod 600 *.pem
+
+          # Application Instance
+          ssh -i app_private_key.pem -o ConnectTimeout=30 -o StrictHostKeyChecking=no \
+            $REMOTE_USER@$REMOTE_APP_HOST \
+            "sudo systemd-run --on-active=15m --unit=auto-shutdown.service systemctl poweroff"
+
+          # Database Instance
+          ssh -i database_private_key.pem -o ConnectTimeout=30 -o StrictHostKeyChecking=no \
+            $REMOTE_USER@$REMOTE_DATABASE_HOST \
+            "sudo systemd-run --on-active=15m --unit=auto-shutdown.service systemctl poweroff"
