@@ -1,7 +1,7 @@
 name: Deploy and Update Environment
 
 on:
-  workflow_dispatch: # Дозволяє запуск вручну через UI GitHub
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -17,17 +17,18 @@ jobs:
 
       - name: Start EC2 Instances
         run: |
-          aws ec2 start-instances --instance-ids "${{APPLICATION_INSTANCE_ID}}" "${{DATABASE_INSTANCE_ID}}" # Додайте ваші instance IDs
+          # Access instance IDs from GitHub Secrets
+          aws ec2 start-instances --instance-ids "${{ secrets.APPLICATION_INSTANCE_ID }}" "${{ secrets.DATABASE_INSTANCE_ID }}"
 
       - name: Wait for instances to start
         run: |
-          aws ec2 wait instance-running --instance-ids "${{APPLICATION_INSTANCE_ID}}" "${{DATABASE_INSTANCE_ID}}"
+          aws ec2 wait instance-running --instance-ids "${{ secrets.APPLICATION_INSTANCE_ID }}" "${{ secrets.DATABASE_INSTANCE_ID }}"
 
       - name: Get Database Instance IP
         id: get-database-ip
         run: |
           PUBLIC_IP=$(aws ec2 describe-instances \
-            --instance-ids "${{DATABASE_INSTANCE_ID}}" \
+            --instance-ids "${{ secrets.DATABASE_INSTANCE_ID }}" \
             --query "Reservations[0].Instances[0].PublicIpAddress" \
             --output text)
           echo "database_ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
@@ -36,7 +37,7 @@ jobs:
         id: get-app-ip
         run: |
           PUBLIC_IP=$(aws ec2 describe-instances \
-            --instance-ids "${{APPLICATION_INSTANCE_ID}}" \ 
+            --instance-ids "${{ secrets.APPLICATION_INSTANCE_ID }}" \
             --query "Reservations[0].Instances[0].PublicIpAddress" \
             --output text)
           echo "app_ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
@@ -48,17 +49,18 @@ jobs:
           REMOTE_HOST: ${{ steps.get-app-ip.outputs.app_ip }}
           ENV_FILE_PATH: "/home/ubuntu/gemini-python-app/.env"
         run: |
-          # Збереження SSH-ключа
+          # Save SSH key
           echo "$SSH_APP_PRIVATE_KEY" > app_private_key.pem
           chmod 600 app_private_key.pem
 
+          # Update DB_HOST in .env file
           ssh -i app_private_key.pem -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST \
             "sed -i 's/DB_HOST=.*/DB_HOST=${{ steps.get-database-ip.outputs.database_ip }}/g' $ENV_FILE_PATH"
 
-          # Перезапуск Docker (приклад для docker-compose)
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST \
+          # Restart Docker container with corrected commands
+          ssh -i app_private_key.pem -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST \
             "cd /home/ubuntu/gemini-python-app/ && \
             docker stop python-app-container || true && \
             docker rm python-app-container || true && \
-            docker build -t python-app . && \ 
-            docker run --env-file .env --name python-app-container python-app"
+            docker build -t python-app . && \
+            docker run -d --env-file .env --name python-app-container python-app"
