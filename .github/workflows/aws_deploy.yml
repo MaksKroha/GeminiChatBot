@@ -73,17 +73,21 @@ jobs:
           REMOTE_APP_HOST: ${{ steps.get-app-ip.outputs.app_ip }}
           REMOTE_DATABASE_HOST: ${{ steps.get-database-ip.outputs.database_ip }}
         run: |
-          # Підготовка ключів
           echo "$SSH_APP_PRIVATE_KEY" > app_private_key.pem
           echo "$SSH_DATABASE_PRIVATE_KEY" > database_private_key.pem
           chmod 600 *.pem
+          
+          
+          SHUTDOWN_CMD='
+          if systemctl is-active --quiet auto-shutdown.timer; then
+            echo "Timer auto-shutdown.timer already active, restarting..."
+            sudo systemctl restart auto-shutdown.timer
+          else
+            echo "Timer auto-shutdown.timer not found, creating new..."
+            sudo systemd-run --on-active=15m --unit=auto-shutdown.service systemctl poweroff
+          fi
+          '
 
-          # Application Instance
-          ssh -i app_private_key.pem -o ConnectTimeout=30 -o StrictHostKeyChecking=no \
-            $REMOTE_USER@$REMOTE_APP_HOST \
-            "sudo systemd-run --on-active=15m --unit=auto-shutdown.service systemctl poweroff"
+          ssh -i app_private_key.pem -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_APP_HOST "$SHUTDOWN_CMD"
 
-          # Database Instance
-          ssh -i database_private_key.pem -o ConnectTimeout=30 -o StrictHostKeyChecking=no \
-            $REMOTE_USER@$REMOTE_DATABASE_HOST \
-            "sudo systemd-run --on-active=15m --unit=auto-shutdown.service systemctl poweroff"
+          ssh -i database_private_key.pem -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_DATABASE_HOST "$SHUTDOWN_CMD"
