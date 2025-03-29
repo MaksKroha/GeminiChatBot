@@ -3,7 +3,7 @@
 This project is a Telegram chatbot that leverages the Gemini API to provide interactive and intelligent conversations. It allows users to engage in chats, save chat history, and retrieve previous conversations. The bot is designed to handle multiple users, store chat data in a PostgreSQL database, and provide a seamless user experience. You can try it but after a simple installation.
 
 ## Github Actions
-You can try bot by ruuning a github actions workflow, the servers will automatically start and stop after 15 minute working automatically stop
+You can try bot by running a github actions workflow, the servers will automatically start and after 15 minute working automatically stop (but you have to have a permissions)
 
 ## Features
 
