@@ -95,7 +95,8 @@ You can try bot by running a github actions workflow, the servers will automatic
 The project includes Docker support for easy deployment.
 
 ### Running with Docker Compose
-
+1. You must by yourself configure docker-compose.yml with postgres and python services (do not forget to configure your .env file)
+2. Than run a command which is autommaticlly building and starts your project
 ```bash
 docker-compose up --build
 ```
@@ -110,7 +111,6 @@ docker-compose down
 
 - **bot**: Runs the Telegram bot backend in Python.
 - **postgres**: Hosts the PostgreSQL database.
-- **pgadmin**: Provides a web interface for managing the database.
 
 ### Database Initialization
 
